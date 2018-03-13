@@ -3,6 +3,9 @@ package orm.mvp.mvp.presenter;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+
 import orm.mvp.mvp.bean.User;
 import orm.mvp.mvp.model.LoginModel;
 import orm.mvp.mvp.view.LoginView;
@@ -15,7 +18,7 @@ import orm.mvp.mvp.view.LoginView;
  * 需要同时要有View的对象和Model的对象！一般做法是：在构造方法中创建model对象，并创建一个方法绑定View接口
  * 这里可以发现数据处理后或者逻辑判断完后都是给mvp中的View对象来做操作的！
  */
-public class LoginPresenter extends BasePresenter {
+public class LoginPresenter extends BasePresenter<LoginView> {
 
     private LoginModel loginModel;
     private LoginView loginView;
@@ -26,13 +29,8 @@ public class LoginPresenter extends BasePresenter {
         user = new User();
     }
 
-    @Override
-    public void bindView(Object mvpview) {
-        super.bindView(mvpview);
-        loginView = (LoginView) mvpview;
-    }
-
     public void login() {
+        loginView = getView();
         user.setUserName(loginView.getUserName());
         user.setUserPwd(loginView.getUserPwd());
         if (isParamsOk()) {
