@@ -1,9 +1,10 @@
 package orm.mvp.ui.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import orm.mvp.R;
+import orm.mvp.databinding.LoginMainBinding;
 import orm.mvp.mvp.bean.User;
 import orm.mvp.mvp.presenter.LoginPresenter;
 import orm.mvp.mvp.view.LoginView;
@@ -29,15 +31,31 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.btn_login)
     Button btn_login;
 
+    User user;
     private LoginPresenter loginPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_main);
+//        setContentView(R.layout.login_main);
+//        ButterKnife.bind(this);
+        //Entrance.init(getApplicationContext());
+        LoginMainBinding binding = DataBindingUtil.setContentView(this, R.layout.login_main);
         ButterKnife.bind(this);
+        user = new User();
+        binding.setUser(user);
+        user.userName1.set("mvp");
+        user.userPwd1.set("123456");
         loginPresenter = new LoginPresenter();
         loginPresenter.bindView(LoginActivity.this);//绑定View和Presenter，因为这个Activity已经实现了接口，已经包含了View对象
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user.userName1.set("mvp");
+                user.userPwd1.set("123456");
+                loginPresenter.login();
+            }
+        });
     }
 
     @Override
